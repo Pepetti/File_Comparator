@@ -139,25 +139,17 @@ void deleteWord(struct binaryTree *root, int trace) {
 **poistaSana poistaa sanan sekä ilmoittaa sanan esiintymiskerrat annetussa tiedostossa.
 */
 unsigned long allWords (FILE *input1, FILE *input2, int trace){
+
+	char buffer[n];
 	
 	int l = 0;
-	int pos = 0;
-	int k;
+	int c = 0;
 
-	char inputArray1[n];
-	
 	struct binaryTree *root = NULL;
 	char *characterPointer2;
 	char *characterPointer1;
 	unsigned long diffWordCount = 0;
 	unsigned long allWordCount = 0;
-
-	int inputArraySize = sizeof(inputArray1)/sizeof(inputArray1[0]);
-
-	while ((characterPointer1 = getWord(input1)) != NULL )
-
-	for (int k = 0; k < 100; k++)
-    printf("%s\n", inputArray1[k]);
 
 	while ((characterPointer2 = getWord(input2)) !=NULL)
 	diffWordCount += addWord(characterPointer2, &root);
@@ -168,6 +160,12 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 		allWordCount += newArray[l].times;
 		l++;
 	}
+
+	while (c < n - 1 && (characterPointer1 = fgetc(input1))!= EOF) {
+		buffer[c++] = characterPointer1;
+		}
+	buffer[c] = '\0';	
+
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
 }
