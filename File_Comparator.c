@@ -144,6 +144,7 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	
 	int l = 0;
 	int c = 0;
+    int i = 0;
 
 	struct binaryTree *root = NULL;
 	char *characterPointer2;
@@ -162,10 +163,19 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	}
 
 	while (c < n - 1 && (characterPointer1 = fgetc(input1))!= EOF) {
-		buffer[c++] = characterPointer1;
+		buffer[c++] = tolower(characterPointer1);
 		}
-	buffer[c] = '\0';	
+	buffer[c] = '\0';
 
+    int init_size = strlen(buffer);
+    char delim[] = "' '1234567890.,:;\\//-";
+    char *ptr = strtok(buffer, delim);
+    
+    while (ptr != NULL){
+        ptr = strtok(NULL, delim);
+        printf("%s", ptr);
+        printf("\n");
+    }
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
 }
