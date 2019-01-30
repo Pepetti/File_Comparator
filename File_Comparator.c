@@ -171,11 +171,15 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
     char delim[] = "' '1234567890.,:;\\//-";
     char *ptr = strtok(buffer, delim);
     
-    while (ptr != NULL){
-        ptr = strtok(NULL, delim);
-        printf("%s", ptr);
-        printf("\n");
-    }
+	for (i = 0; i < newArray[i].pword != '\0'; i++){
+		
+		if (!strcmp(newArray[i].pword, ptr)){
+		printf("%s", ptr);
+		}
+		ptr = strtok(NULL, delim);
+	}
+	
+
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
 }
