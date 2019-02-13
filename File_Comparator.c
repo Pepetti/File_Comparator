@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define WORDCHUNK 20
 #define n 999999
@@ -22,7 +23,6 @@ struct Words{
 
 int i = 0;
 struct Words newArray[n];
-
 
 /*compare funktio qsortia varten*/
 int compare (const void *a, const void *b){
@@ -138,17 +138,42 @@ void deleteWord(struct binaryTree *root, int trace) {
 **hankiSana funktio hakee yksittäisiä sanoja tiedostosta, lisaaSana lisää sanan puuhun. 
 **poistaSana poistaa sanan sekä ilmoittaa sanan esiintymiskerrat annetussa tiedostossa.
 */
-unsigned long allWords (FILE *input1, FILE *input2, int trace){
 
+void string_in(char *my_str, char string_list[], size_t num_strings, char delimiter[]){
+	/*
+	printf("Im here");
+	for ( int i = 0; i < num_strings; i++ )
+	if (strcmp(my_str, string_list[i]) == 0 ){
+		printf ("%c", my_str);
+		return true;
+	}
+	return false;
+	*/
+}
+
+void string_tokens(FILE *file_input1){
+	
+	int c = 0;
+	char *characterPointer1;
 	char buffer[n];
+	int init_size = strlen(buffer);
+	char delim[] = "' '1234567890.,:;\\//-";
+	char *ptr = strtok(buffer, delim);
+
+	while (c < n - 1 && (*characterPointer1 = fgetc(file_input1)!= EOF)) {
+		buffer[c++] = tolower(*characterPointer1);
+	}
+	buffer[c] = '\0';
+	while (ptr != NULL)
+	string_in(ptr, newArray, n, delim);
+}
+
+unsigned long allWords (FILE *input2, int trace){
 	
 	int l = 0;
-	int c = 0;
-    int i = 0;
 
 	struct binaryTree *root = NULL;
 	char *characterPointer2;
-	char *characterPointer1;
 	unsigned long diffWordCount = 0;
 	unsigned long allWordCount = 0;
 
@@ -161,24 +186,6 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 		allWordCount += newArray[l].times;
 		l++;
 	}
-
-	while (c < n - 1 && (characterPointer1 = fgetc(input1))!= EOF) {
-		buffer[c++] = tolower(characterPointer1);
-		}
-	buffer[c] = '\0';
-
-    int init_size = strlen(buffer);
-    char delim[] = "' '1234567890.,:;\\//-";
-    char *ptr = strtok(buffer, delim);
-    
-	for (i = 0; i < newArray[i].pword != '\0'; i++){
-		
-		if (!strcmp(newArray[i].pword, ptr)){
-		printf("%s", ptr);
-		}
-		ptr = strtok(NULL, delim);
-	}
-	
 
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
@@ -211,8 +218,9 @@ int main(int argc, char *argv[]){
 		input1 = fopen(tiedosto1, "r");
 		input2 = fopen(tiedosto2, "r");
 
-		printf("Tiedostossa oli %lu erilaista sanaa\n", allWords(input1, input2, trace));
-	
+		printf("Tiedostossa oli %lu erilaista sanaa\n", allWords(input2, trace));
+		string_tokens(input1);
+
 		if (input2 != stdin) fclose(input2);
 
 		if (input2 == NULL){
@@ -224,7 +232,7 @@ int main(int argc, char *argv[]){
       if  (strcmp("-v",argv[1]) == 0){
         trace = 1;
         input2 = stdin;
-        printf("Tiedostossa oli %lu erilaista sanaa\n", allWords(input1, input2,trace)); 
+        printf("Tiedostossa oli %lu erilaista sanaa\n", allWords(input2,trace)); 
 		if (input2 != stdin) fclose(input2);
       }
       else
