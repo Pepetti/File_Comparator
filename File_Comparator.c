@@ -19,7 +19,7 @@ struct binaryTree {
 struct Words{
 	char *pword;
 	long times;
-}; 
+};
 
 int i = 0;
 struct Words newArray[n];
@@ -139,34 +139,30 @@ void deleteWord(struct binaryTree *root, int trace) {
 **poistaSana poistaa sanan sekä ilmoittaa sanan esiintymiskerrat annetussa tiedostossa.
 */
 
-void string_in(char *my_str, char string_list[], size_t num_strings, char delimiter[]){
-	/*
-	printf("Im here");
-	for ( int i = 0; i < num_strings; i++ )
-	if (strcmp(my_str, string_list[i]) == 0 ){
-		printf ("%c", my_str);
-		return true;
-	}
-	return false;
-	*/
-}
+void string_tokens(FILE *input1){
 
-void string_tokens(FILE *file_input1){
-	
+	int k = 0;
 	int c = 0;
-	char *characterPointer1;
 	char buffer[n];
+	char *characterPointer1;
+	
+	while (c < n - 1 && (characterPointer1 = fgetc(input1))!= EOF) {
+		buffer[c++] = tolower(characterPointer1);
+	}
+	buffer[c] = '\0';
+	
 	int init_size = strlen(buffer);
 	char delim[] = "' '1234567890.,:;\\//-";
 	char *ptr = strtok(buffer, delim);
 
-	while (c < n - 1 && (*characterPointer1 = fgetc(file_input1)!= EOF)) {
-		buffer[c++] = tolower(*characterPointer1);
+	while(ptr != NULL) {
+  for ( int k = 0; k < n; k++)
+	if (strcmp(ptr, newArray[k].pword) == 0 ){
+		printf ("%s", ptr);
+		}
 	}
-	buffer[c] = '\0';
-	while (ptr != NULL)
-	string_in(ptr, newArray, n, delim);
 }
+
 
 unsigned long allWords (FILE *input2, int trace){
 	
@@ -174,6 +170,7 @@ unsigned long allWords (FILE *input2, int trace){
 
 	struct binaryTree *root = NULL;
 	char *characterPointer2;
+
 	unsigned long diffWordCount = 0;
 	unsigned long allWordCount = 0;
 
