@@ -22,7 +22,7 @@ struct Words{
 };
 
 int i = 0;
-int k = 0;
+int laskuri = 0;
 struct Words newArray[n];
 
 
@@ -137,6 +137,32 @@ void deleteWord(struct binaryTree *root, int trace) {
 	}
 }
 
+void deleteWord2(struct binaryTree *root, int trace) {
+	
+	if (root == NULL) return;
+
+	deleteWord2(root->left ,trace);
+	
+	if (trace){
+		
+		if(strchr(newArray[i].pword, root->word)){
+			newArray[i].pword = malloc(sizeof(root->word));
+			newArray[i].pword = root->word;
+			i++;
+			deleteWord2(root->right,trace);
+		}else if(laskuri <= 50){
+			laskuri++;
+			printf("%s", root->word);
+			newArray[i].pword = malloc(sizeof(root->word));
+			newArray[i].pword = root->word;
+			i++;
+			deleteWord2(root->right,trace);
+		}else{
+			//end of recursion
+		}
+	}
+}
+
 /*
 **kaikkiSanat yhdistää kolme aikaisempaa funktiota keskenään.
 **hankiSana funktio hakee yksittäisiä sanoja tiedostosta, lisaaSana lisää sanan puuhun. 
@@ -145,6 +171,8 @@ void deleteWord(struct binaryTree *root, int trace) {
 
 unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	int l = 0;
+	int k = 0;
+
 	struct binaryTree *temp;
 
 	struct binaryTree *root = NULL;
@@ -155,22 +183,19 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	unsigned long allWordCount = 0;
 
 	while ((characterPointer2 = getWord(input2)) !=NULL)
-	diffWordCount += addWord(characterPointer2, &root);
-	deleteWord(root,trace);
+		diffWordCount += addWord(characterPointer2, &root);
+	
+	deleteWord(root, trace);
 	qsort((void *) newArray, diffWordCount, sizeof(newArray[0]), compare);
 
 	while (newArray[l].pword != '\0'){
 		allWordCount += newArray[l].times;
 		l++;
 	}
-	
-	printf("**************************************************");
 
-	while ((characterPointer1 = getWord(input1)) !=NULL){
-	if(!strcmp(newArray[l].pword, characterPointer1))
-			printf("Sana %s ei esiintynyt tiedostossa 2\n", characterPointer1);
-	}
-	
+	while (characterPointer1 = getWord(input1) !=NULL)
+		addWord(characterPointer1, &root);
+	deleteWord2(root, trace);
 
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
@@ -233,66 +258,3 @@ int main(int argc, char *argv[]){
   }
   return EXIT_SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void string_tokens(FILE *input1){
-
-	int laskuri = 0;
-	int k = 0;
-	int c = 0;
-	char buffer[n];
-	char *characterPointer1;
-	
-	while (c < n - 1 && (characterPointer1 = fgetc(input1))!= EOF) {
-		buffer[c++] = tolower(characterPointer1);
-	}
-	buffer[c] = '\0';
-	
-	int init_size = strlen(buffer);
-	char delim[] = "' '1234567890.,:;\\//-";
-	char *ptr = strtok(buffer, delim);
-
-	do {
-			for (k = 0; newArray[k].pword != '\0'; ++k){
-				if (strcmp(newArray[k].pword, ptr) == 0){
-					ptr = strtok(NULL, delim);
-				}
-				else{
-					printf ("%s", ptr);
-					printf	("\n");
-					laskuri++;
-				}
-			}
-			
-	}
-	while (laskuri < 50);
-}
-
-*/
