@@ -22,14 +22,8 @@ struct Words{
 };
 
 int i = 0;
-int laskuri = 0;
+int counter = 0;
 struct Words newArray[n];
-
-
-/*compare funktio qsortia varten*/
-int compare (const void *a, const void *b){
-	return (((struct Words*)b)->times - ((struct Words*)a)->times); 
-}
 
 char *getWord(FILE *input){
   char *temp = NULL;
@@ -76,7 +70,7 @@ char *getWord(FILE *input){
 **lisaaSana palauttaa intin, joka osoittaa, kuinka monta sanaa lisätään. 
 **/
 
-int addWord(char *teksti, struct binaryTree **base){
+int addWord(char *text, struct binaryTree **base, int fileNum){
 
 	struct binaryTree *temp;
 	int direction;
@@ -87,7 +81,7 @@ int addWord(char *teksti, struct binaryTree **base){
 	
 	/*Asetetaan solmulle arvot*/
 	temp->left  = temp->right = NULL;
-	temp->word = teksti;
+	temp->word = text;
 	temp->used = 1;
 	
 	/*Laitetaan sana oikealle paikalleen binääripuussa*/
@@ -114,10 +108,19 @@ int addWord(char *teksti, struct binaryTree **base){
 				else /*Uusi sana on entisen sanan vasemmalla*/
 					this = this->left ;
 		}
-		if (direction < 0)
+		if (direction < 0){
 			prev->right = temp;
-		else
+			if((fileNum == 1) && (counter < 50)){
+					counter++;
+					printf("%d. %s\n", counter, text);
+				}
+		}else{
 			prev->left  = temp;
+			if((fileNum == 1) && (counter < 50)){
+					counter++;
+					printf("%d. %s\n", counter, text);
+				}
+		}
 	}
 	return 1;
 	
@@ -129,37 +132,11 @@ void deleteWord(struct binaryTree *root, int trace) {
 
 	deleteWord(root->left ,trace);
 	if (trace){
-	newArray[i].pword = malloc(sizeof(root->word));
-	newArray[i].pword = root->word;
-	newArray[i].times = root->used;
-	i++;
-	deleteWord(root->right,trace);
-	}
-}
-
-void deleteWord2(struct binaryTree *root, int trace) {
-	
-	if (root == NULL) return;
-
-	deleteWord2(root->left ,trace);
-	
-	if (trace){
-		
-		if(strchr(newArray[i].pword, root->word)){
-			newArray[i].pword = malloc(sizeof(root->word));
-			newArray[i].pword = root->word;
-			i++;
-			deleteWord2(root->right,trace);
-		}else if(laskuri <= 50){
-			laskuri++;
-			printf("%s", root->word);
-			newArray[i].pword = malloc(sizeof(root->word));
-			newArray[i].pword = root->word;
-			i++;
-			deleteWord2(root->right,trace);
-		}else{
-			//end of recursion
-		}
+		newArray[i].pword = malloc(sizeof(root->word));
+		newArray[i].pword = root->word;
+		newArray[i].times = root->used;
+		i++;
+		deleteWord(root->right,trace);
 	}
 }
 
@@ -171,9 +148,6 @@ void deleteWord2(struct binaryTree *root, int trace) {
 
 unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	int l = 0;
-	int k = 0;
-
-	struct binaryTree *temp;
 
 	struct binaryTree *root = NULL;
 	char *characterPointer1;
@@ -183,19 +157,17 @@ unsigned long allWords (FILE *input1, FILE *input2, int trace){
 	unsigned long allWordCount = 0;
 
 	while ((characterPointer2 = getWord(input2)) !=NULL)
-		diffWordCount += addWord(characterPointer2, &root);
+		diffWordCount += addWord(characterPointer2, &root, 2);
 	
 	deleteWord(root, trace);
-	qsort((void *) newArray, diffWordCount, sizeof(newArray[0]), compare);
 
 	while (newArray[l].pword != '\0'){
 		allWordCount += newArray[l].times;
 		l++;
 	}
 
-	while (characterPointer1 = getWord(input1) !=NULL)
-		addWord(characterPointer1, &root);
-	deleteWord2(root, trace);
+	while ((characterPointer1 = getWord(input1)) !=NULL)
+		addWord(characterPointer1, &root, 1);
 
 	printf ("Tiedostossa oli kaiken kaikkiaan %lu sanaa\n", allWordCount);
 	return diffWordCount;
